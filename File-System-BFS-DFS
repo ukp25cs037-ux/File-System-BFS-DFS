@@ -1,0 +1,96 @@
+#include <stdio.h>
+
+#define MAX 20
+
+int graph[MAX][MAX];
+int visited[MAX];
+int n;
+
+void BFS(int start, int target)
+{
+    int queue[MAX], front = 0, rear = 0;
+    int found = 0;
+
+    for (int i = 0; i < n; i++)
+        visited[i] = 0;
+
+    queue[rear++] = start;
+    visited[start] = 1;
+
+    printf("\nBFS Traversal: ");
+
+    while (front < rear)
+    {
+        int current = queue[front++];
+        printf("%d ", current);
+
+        if (current == target)
+            found = 1;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (graph[current][i] && !visited[i])
+            {
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+    }
+
+    if (found)
+        printf("\nFile found using BFS.\n");
+    else
+        printf("\nFile not found using BFS.\n");
+}
+
+void DFS(int current, int target, int *found)
+{
+    visited[current] = 1;
+    printf("%d ", current);
+
+    if (current == target)
+        *found = 1;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (graph[current][i] && !visited[i])
+            DFS(i, target, found);
+    }
+}
+
+int main()
+{
+    int start, target;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix:\n");
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &graph[i][j]);
+
+    printf("Enter starting node: ");
+    scanf("%d", &start);
+
+    printf("Enter file to search: ");
+    scanf("%d", &target);
+
+    BFS(start, target);
+
+    for (int i = 0; i < n; i++)
+        visited[i] = 0;
+
+    int found = 0;
+
+    printf("\nDFS Traversal: ");
+    DFS(start, target, &found);
+
+    if (found)
+        printf("\nFile found using DFS.\n");
+    else
+        printf("\nFile not found using DFS.\n");
+
+    return 0;
+}
